@@ -1,0 +1,24 @@
+# log message format
+log_format: "<Date> <Time> <Pid> <Level> <Component>: <Content>"
+
+# pre-processing regex
+preprocess: # supply all preprocessing regex
+  - blk_-?\d+ # note how the regex is specified (not a raw string in the yaml file)
+  - (\d+\.){3}\d+(:\d+)?
+
+# log parsing method parameters for grid search
+logparser:
+  method: drain # log parsing method
+  parameters:
+    depth: # drain parse tree depth
+      max: 2 # maximum
+      min: 1 # minimum
+      step: 1 # step size
+    st: # drain similarity threshold
+      max: 0.2
+      min: 0.1
+      step: 0.1
+    maxChild: # maximum number of children
+      max: 100
+      min: 100
+      step: 1
