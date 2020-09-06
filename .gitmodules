@@ -1,0 +1,4 @@
+[submodule "logparser"]
+	path = logparser
+	url = https://github.com/tyronevb/logparser.git
+	branch = master
