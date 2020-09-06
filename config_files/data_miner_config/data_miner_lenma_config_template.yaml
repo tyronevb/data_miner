@@ -1,0 +1,13 @@
+# log message format
+log_format: "<Date> <Time> <Pid> <Level> <Component>: <Content>"
+
+# pre-processing regex
+preprocess: # supply all preprocessing regex
+  - blk_-?\d+ # note how the regex is specified (not a raw string in the yaml file)
+  - (\d+\.){3}\d+(:\d+)?
+
+# log parsing method parameters
+logparser:
+  method: lenma # log parsing method
+  parameters:
+    threshold: 3 # LenMa

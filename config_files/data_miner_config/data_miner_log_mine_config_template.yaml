@@ -1,0 +1,15 @@
+# log message format
+log_format: "<Date> <Time> <Pid> <Level> <Component>: <Content>"
+
+# pre-processing regex
+preprocess: # supply all preprocessing regex
+  - blk_-?\d+ # note how the regex is specified (not a raw string in the yaml file)
+  - (\d+\.){3}\d+(:\d+)?
+
+# log parsing method parameters
+logparser:
+  method: logmine # log parsing method
+  parameters:
+    max_dist: 0.005 # LogMine
+    k: 1 # LogMine
+    levels: 2 # LogMine
