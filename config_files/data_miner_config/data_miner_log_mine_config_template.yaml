@@ -10,6 +10,9 @@ preprocess: # supply all preprocessing regex
 logparser:
   method: logmine # log parsing method
   parameters:
-    max_dist: 0.005 # LogMine
-    k: 1 # LogMine
-    levels: 2 # LogMine
+    max_dist: 0.001 # LogMine maximum distance between messages and representative cluster message
+    k: 1 # LogMine clustering parameter
+    k1: 1 # LogMine clustering parameter
+    k2: 1 # LogMine clustering parameter
+    alpha: 100 # LogMine factor by which to increase max dist for higher levels
+    levels: 2 # LogMine max number of levels in the clustering hierarchy

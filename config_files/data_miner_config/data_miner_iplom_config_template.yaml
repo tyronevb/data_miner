@@ -10,5 +10,9 @@ preprocess: # supply all preprocessing regex
 logparser:
   method: iplom # log parsing method
   parameters:
-    CT: 0.35 # IPLoM
-    lowerBound: 0.25 # IPLoM
+    maxEventLen: 200 # length of the longest log/event
+    step2support: 0 # IPLoM File Support Threshold
+    PST: 0 # IPLoM Partition Support Threshold
+    CT: 0.35 # IPLoM Cluster Goodness Threshold
+    lowerBound: 0.25 # control thresholds for 1-M and M-1 relationships
+    upperBound: 0.9 # control thresholds for 1-M and M-1 relationships

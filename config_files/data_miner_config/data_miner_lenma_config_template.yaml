@@ -10,4 +10,4 @@ preprocess: # supply all preprocessing regex
 logparser:
   method: lenma # log parsing method
   parameters:
-    threshold: 3 # LenMa
+    threshold: 0.9 # LenMa Cluster Similarity Threshold
