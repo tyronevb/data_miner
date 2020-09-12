@@ -9,4 +9,4 @@ preprocess: # supply all preprocessing regex
 logparser:
   method: regex # log parsing method
   parameters:
-    regex_templates: /Users/tyronevb/Documents/msc work 2020/datasets/mkat_cbf_0/cbf_corr2_servlet_templates_csv.csv # path to file containing regex templates
+    regex_templates: /Users/tyronevb/Documents/msc work 2020/datasets/mkat_cbf/templates/cbf_corr2_servlet_regex_csv.csv # path to file containing regex templates

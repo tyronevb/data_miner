@@ -195,7 +195,14 @@ class LogParser(object):
                     events.append(entry)
                     templates.append(template_row["Template"])
                     template_ids.append(template_row["Template ID"])
-                    parameters.append(list(template_match.groups()))
+
+                    temp_param_list = []
+                    # apply some post-processing to extract parameters
+                    for param in template_match.groups():
+                        unique_params = param.split(",")
+                        for u in unique_params:
+                            temp_param_list.append(u.strip().replace("'", ""))
+                    parameters.append(temp_param_list)
 
                     # drop log message from the copied dataset (reduces the search space after each iteration)
                     # also keeps a record of entries that are unmatched
