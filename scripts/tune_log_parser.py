@@ -7,8 +7,6 @@ Uses the ParserTuner class.
 __author__ = "tyronevb"
 __date__ = "2020"
 
-# TODO: fix relative imports
-
 import sys
 
 sys.path.append("../")

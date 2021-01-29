@@ -18,9 +18,6 @@ from logparser.logparser.utils import evaluator  # noqa
 from src import RegexLogParser  # noqa
 from typing import Tuple, List  # noqa
 
-# TODO: clean up relative imports
-# TODO: consider breaking up the logparser calls so that each part of the process is visibile and accessible?
-
 
 class DataMiner(object):
     """Class definition for the DataMiner class."""
@@ -62,7 +59,7 @@ class DataMiner(object):
             log_format=self.log_format, indir=input_dir, outdir=output_dir, rex=self.preprocess_regex, **self.parameters
         )
 
-    def parse_logs(self, log_file: str, save_parameters=True):
+    def parse_logs(self, log_file: str, save_parameters=True) -> (str, str):
         """
         Parse the given log files.
 
@@ -80,6 +77,11 @@ class DataMiner(object):
             self.log_parser.keep_para = False  # set attribute flag in LogParser to not save parameters
 
         self.log_parser.parse(logName=log_file)
+
+        path_to_event_matrix = self.log_parser.savePath + log_file + "_templates.csv"
+        path_to_structured_log = self.log_parser.savePath + log_file + "_structured.csv"
+
+        return path_to_structured_log, path_to_event_matrix
 
     @staticmethod
     def parse_config_file(config_file: str, debug: bool = False) -> Tuple[str, List[str], str, dict]:
@@ -125,9 +127,12 @@ class DataMiner(object):
         if debug:
             print("\nConfiguration parsed from config file:\n=====================================")
             print(
-                "log_format: {lf}\npreprocess_regex: {pr}\nlogparser: {lp}\nparameters: {p}".format(
+                "log_format: {lf}\npreprocess_regex: {pr}\nlogparser: {lp}\nparameters: {p}\n".format(
                     lf=log_format, pr=preprocess_regex, lp=logparser, p=parameters
                 )
             )
 
         return log_format, preprocess_regex, logparser, parameters
+
+
+# end

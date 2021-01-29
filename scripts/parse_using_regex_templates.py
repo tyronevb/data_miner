@@ -10,7 +10,6 @@ import yaml
 sys.path.append("..")
 from src import RegexLogParser  # noqa
 
-# todo: clean up relative imports
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

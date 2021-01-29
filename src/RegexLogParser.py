@@ -19,8 +19,6 @@ import re
 import os
 from datetime import datetime
 
-# TODO: make a note about the process, generate GT manually, run on files, see what's missing, add to GT (create flow chart/diagram for this) # noqa
-
 
 class LogParser(object):
     """Class definition for LogParser."""

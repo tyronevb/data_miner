@@ -9,8 +9,6 @@ logparser (https://github.com/logpai/logparser)
 __author__ = "tyronevb"
 __date__ = "2020"
 
-# todo: clean up relative imports
-
 import time
 import os
 import numpy as np
