@@ -1,0 +1,36 @@
+# log message format
+log_format: "<Date> <Time> <Pid> <Level> <Component>: <Content>"
+
+# pre-processing regex
+preprocess: # supply all preprocessing regex
+  - blk_-?\d+ # note how the regex is specified (not a raw string in the yaml file)
+  - (\d+\.){3}\d+(:\d+)?
+
+# log parsing method parameters for grid search
+logparser:
+  method: logmine # log parsing method
+  parameters:
+    max_dist: # LogMine maximum distance between messages and representative cluster message
+      max: 1 # maximum
+      min: 0 # minimum
+      step: 0.001 # step size
+    k: # LogMine clustering parameter
+      max: 1
+      min: 0.1
+      step: 0.1
+    k1: # LogMine clustering parameter
+      max: 1
+      min: 0.1
+      step: 0.1
+    k2: # LogMine clustering parameter
+      max: 1
+      min: 0.1
+      step: 0.1
+    alpha: # LogMine factor by which to increase max dist for higher levels
+      max: 100
+      min: 0
+      step: 0.1
+    levels: # LogMine max number of levels in the clustering hierarchy
+      max: 10
+      min: 1
+      step: 1

@@ -1,0 +1,36 @@
+# log message format
+log_format: "<Date> <Time> <Pid> <Level> <Component>: <Content>"
+
+# pre-processing regex
+preprocess: # supply all preprocessing regex
+  - blk_-?\d+ # note how the regex is specified (not a raw string in the yaml file)
+  - (\d+\.){3}\d+(:\d+)?
+
+# log parsing method parameters for grid search
+logparser:
+  method: iplom # log parsing method
+  parameters:
+    maxEventLen: # length of the longest log/event
+      max: 300 # maximum
+      min: 10 # minimum
+      step: 10 # step size
+    step2support: # IPLoM File Support Threshold
+      max: 1
+      min: 0
+      step: 0.01
+    PST: # IPLoM Partition Support Threshold
+      max: 1
+      min: 0
+      step: 0.01
+    CT: # IPLoM Cluster Goodness Threshold
+      max: 1
+      min: 0
+      step: 0.01
+    lowerBound: # control thresholds for 1-M and M-1 relationships
+      max: 1
+      min: 0
+      step: 0.01
+    upperBound: # control thresholds for 1-M and M-1 relationships
+      max: 1
+      min: 0
+      step: 0.01

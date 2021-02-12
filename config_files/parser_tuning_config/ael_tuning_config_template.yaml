@@ -8,17 +8,13 @@ preprocess: # supply all preprocessing regex
 
 # log parsing method parameters for grid search
 logparser:
-  method: drain # log parsing method
+  method: ael # log parsing method
   parameters:
-    depth: # drain parse tree depth
-      max: 10 # maximum
-      min: 1 # minimum
+    minEventCount: # AEL minimum event count
+      max: 20 # maximum
+      min: 0 # minimum
       step: 1 # step size
-    st: # drain similarity threshold
+    merge_percent: # AEL merge percentage
       max: 1
       min: 0
       step: 0.01
-    maxChild: # maximum number of children
-      max: 200
-      min: 0
-      step: 1
