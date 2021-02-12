@@ -9,7 +9,8 @@ logparser (https://github.com/logpai/logparser)
 __author__ = "tyronevb"
 __date__ = "2020"
 
-import time
+from datetime import datetime
+from tqdm import tqdm
 import os
 import numpy as np
 import pandas as pd
@@ -131,6 +132,7 @@ class ParserTuner(object):
 
         return log_format, preprocess_regex, logparser, parameters
 
+    # @profile uncomment this to profile memory usage of tuner
     def tune_log_parser(
         self, input_log_file: str, input_dir: str, output_dir: str, ground_truth: str, verbose: bool = False
     ) -> dict:
@@ -154,11 +156,14 @@ class ParserTuner(object):
         # determine the total number of combinations
         total_combinations = len(self.parameter_grid)
 
-        start_t = time.time()
+        print("==========================")
+        print("Starting tuning of {logparser} . . .".format(logparser=self.logparser))
+
+        start_t = datetime.now()
         results = []
         tuning_record = []
         # use the parameter space to determine the optimal set
-        for idx, combination in enumerate(self.parameter_grid):
+        for idx, combination in tqdm(enumerate(self.parameter_grid), desc="\nTuning . . . .", mininterval=0.01):
             # for every combination of parameters...
 
             # create new output dirs for each idx
@@ -174,13 +179,13 @@ class ParserTuner(object):
             )
 
             if verbose:
-                print("Considering parameter set {}: {}".format(idx, combination))
+                print("\nConsidering parameter set {}: {}".format(idx, combination))
 
             # parse the raw log file using the initialised parser
             l_parser.parse(input_log_file)
 
             # measure the f1_measure and accuracy --> using the ground truth
-            f1_measure, accuracy = evaluator.evaluate(
+            f1_measure, accuracy, precision, recall = evaluator.evaluate(
                 groundtruth=ground_truth,
                 parsedresult=os.path.join(current_output_dir, input_log_file + "_structured.csv"),
             )
@@ -188,7 +193,7 @@ class ParserTuner(object):
             # append the accuracy acheived for this set of paramters to a list
             results.append(accuracy)
             # create new list of results + parameter set
-            tuning_record.append([idx, combination, accuracy])
+            tuning_record.append([idx, combination, accuracy, f1_measure, precision, recall])
 
         # after exploring the entire parameter search space...
         # find combination of parameters that optimize the objective function
@@ -198,31 +203,52 @@ class ParserTuner(object):
 
         # find the set of parameters that yielded the max accuracy
         self.optimal_parameters = self.parameter_grid[optimal_combo_idx]
+        print("Data Miner tuning complete!\n")
+        end_t = datetime.now()
 
-        df_tuning_record = pd.DataFrame(tuning_record, columns=["Run", "Parameter Set", "Accuracy"])
+        df_tuning_record = pd.DataFrame(
+            tuning_record, columns=["Run", "Parameter Set", "Accuracy", "F1", "Precision", "Recall"]
+        )
         df_tuning_record.set_index("Run", inplace=True)
 
-        tuning_file_name = "tuning_record_{date}.csv".format(date=time.strftime("%m-%d-%Y_%Hh%Mm%Ss"))
+        tuning_file_name = "tuning_record_{date}.csv".format(date=start_t.strftime("%m-%d-%Y_%Hh%Mm%Ss"))
 
         df_tuning_record.to_csv("{output_dir}{filename}".format(output_dir=output_dir, filename=tuning_file_name))
 
-        end_t = time.time()
-        print("\n==========================")
-        print("Logparser tuning complete!")
+        log_all = list()  # basic "log" to facilitate writing to file and displaying
+        log_f = list()  # basic "log" to facilita writing to file
+        log_f.append("==========================")
+        log_f.append("Data Miner Tuning - {timestamp}".format(timestamp=start_t.strftime("%d %b %Y , %H:%M:%S")))
+        log_f.append("Log Parsing Algorithm: {log_p}".format(log_p=self.logparser))
+        log_f.append("==========================")
 
         # print out the optimal parameters
-        print(
-            "\nOptimal combination of parameters for "
-            "{logparser}: {optimal}".format(logparser=self.logparser, optimal=self.optimal_parameters)
+        log_all.append(
+            "Optimal combination of parameters for "
+            "{logparser}: {optimal}\n".format(logparser=self.logparser, optimal=self.optimal_parameters)
         )
+
+        log_all.append("Number of combinations for tunable parameters: {combos}".format(combos=total_combinations))
+        log_all.append(
+            "Time taken to search entire parameter space: {tune_time} seconds".format(
+                tune_time=(end_t - start_t).total_seconds()
+            )
+        )
+        log_all.append("Tuning record available at {filename}".format(filename=tuning_file_name))
+        log_all.append("==========================")
 
         # print stats and results
         if verbose:
-            print("\nNumber of combinations for tunable parameters: {combos}".format(combos=total_combinations))
-            print("Time taken to search entire parameter space: {tune_time} seconds".format(tune_time=end_t - start_t))
-            print("Tuning record available at {filename}".format(filename=tuning_file_name))
+            for log in log_all:
+                print(log)
 
-        print("\n==========================")
+        # record tuning record to file
+        tune_log_f_name = "data_miner_tuning_log_{date}.txt".format(date=start_t.strftime("%m-%d-%Y_%Hh%Mm%Ss"))
+        with open("{output_dir}{filename}".format(output_dir=output_dir, filename=tune_log_f_name), "w") as f:
+            for log in log_f:
+                f.write(log + "\n")
+            for log in log_all:
+                f.write(log + "\n")
 
         return self.optimal_parameters
 
@@ -240,7 +266,7 @@ class ParserTuner(object):
         should include trailing /
         """
         output_file_name = "{outdir}data_miner_config_{method}_{date}.yaml".format(
-            outdir=output_dir, method=self.logparser, date=time.strftime("%m-%d-%Y_%Hh%Mm%Ss")
+            outdir=output_dir, method=self.logparser, date=datetime.now().strftime("%m-%d-%Y_%Hh%Mm%Ss")
         )
         config = dict()
         config["log_format"] = self.log_format
