@@ -153,13 +153,20 @@ class ParserTuner(object):
         -------
         optimal_parameters: the set of optimal parameters for the log parser as found by tuning
         """
+        start_t = datetime.now()
+
         # determine the total number of combinations
         total_combinations = len(self.parameter_grid)
 
         print("==========================")
         print("Starting tuning of {logparser} . . .".format(logparser=self.logparser))
 
-        start_t = datetime.now()
+        log_f = list()  # basic "log" to facilita writing to file
+        log_f.append("==========================")
+        log_f.append("Data Miner Tuning - {timestamp}".format(timestamp=start_t.strftime("%d %b %Y , %H:%M:%S")))
+        log_f.append("Log Parsing Algorithm: {log_p}".format(log_p=self.logparser))
+        log_f.append("==========================")
+
         results = []
         tuning_record = []
         # use the parameter space to determine the optimal set
@@ -178,8 +185,8 @@ class ParserTuner(object):
                 **combination
             )
 
-            if verbose:
-                print("\nConsidering parameter set {}: {}".format(idx, combination))
+            print("Considering parameter set {}: {}".format(idx, combination))
+            log_f.append("Considering parameter set {}: {}".format(idx, combination))
 
             # parse the raw log file using the initialised parser
             l_parser.parse(input_log_file)
@@ -189,6 +196,9 @@ class ParserTuner(object):
                 groundtruth=ground_truth,
                 parsedresult=os.path.join(current_output_dir, input_log_file + "_structured.csv"),
             )
+
+            print("Parsing Accuracy achieved: {parse_acc}".format(parse_acc=accuracy))
+            log_f.append("Parsing Accuracy achieved: {parse_acc}".format(parse_acc=accuracy))
 
             # append the accuracy acheived for this set of paramters to a list
             results.append(accuracy)
@@ -216,11 +226,6 @@ class ParserTuner(object):
         df_tuning_record.to_csv("{output_dir}{filename}".format(output_dir=output_dir, filename=tuning_file_name))
 
         log_all = list()  # basic "log" to facilitate writing to file and displaying
-        log_f = list()  # basic "log" to facilita writing to file
-        log_f.append("==========================")
-        log_f.append("Data Miner Tuning - {timestamp}".format(timestamp=start_t.strftime("%d %b %Y , %H:%M:%S")))
-        log_f.append("Log Parsing Algorithm: {log_p}".format(log_p=self.logparser))
-        log_f.append("==========================")
 
         # print out the optimal parameters
         log_all.append(

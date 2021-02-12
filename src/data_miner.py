@@ -10,6 +10,7 @@ __author__ = "tyronevb"
 __date__ = "2020"
 
 import yaml
+import pandas as pd
 import sys
 
 sys.path.append("..")
@@ -59,6 +60,7 @@ class DataMiner(object):
             log_format=self.log_format, indir=input_dir, outdir=output_dir, rex=self.preprocess_regex, **self.parameters
         )
 
+    # @profile uncomment to profile memory usage
     def parse_logs(self, log_file: str, save_parameters=True) -> (str, str):
         """
         Parse the given log files.
@@ -133,6 +135,22 @@ class DataMiner(object):
             )
 
         return log_format, preprocess_regex, logparser, parameters
+
+    @staticmethod
+    def inspect_parsed_result(parsed_log: str) -> Tuple[int, int]:
+        """
+        Inspect the parsed log file and get stats.
+
+        :param parsed_log: path to the parsed log file
+        :return: (int, int) - number of log messages parsed, number of unique events
+        """
+        df_parsed_log = pd.read_csv(parsed_log)
+
+        num_log_messages = len(df_parsed_log)
+
+        num_unique_events = df_parsed_log["EventId"].nunique()
+
+        return num_log_messages, num_unique_events
 
 
 # end
