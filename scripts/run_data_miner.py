@@ -98,7 +98,7 @@ if __name__ == "__main__":
 
     log_all.append("\nNumber of log messages parsed: {}".format(num_logs))
     log_all.append("Number of unique log events extracted: {}\n".format(num_events))
-
+    log_all.append("Time taken to parse: {}".format((end_t - start_t).total_seconds()))
     # evaluate Data Miner Performance
     if args.evaluate:
         # measure the f1_measure and accuracy --> using the ground truth

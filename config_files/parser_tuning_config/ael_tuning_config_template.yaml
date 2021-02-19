@@ -12,7 +12,7 @@ logparser:
   parameters:
     minEventCount: # AEL minimum event count
       max: 20 # maximum
-      min: 0 # minimum
+      min: 2 # minimum
       step: 1 # step size
     merge_percent: # AEL merge percentage
       max: 1

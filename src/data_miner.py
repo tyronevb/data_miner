@@ -78,7 +78,7 @@ class DataMiner(object):
         else:
             self.log_parser.keep_para = False  # set attribute flag in LogParser to not save parameters
 
-        self.log_parser.parse(logName=log_file)
+        self.log_parser.parse(log_file)
 
         path_to_event_matrix = self.log_parser.savePath + log_file + "_templates.csv"
         path_to_structured_log = self.log_parser.savePath + log_file + "_structured.csv"

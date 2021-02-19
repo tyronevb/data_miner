@@ -11,14 +11,10 @@ logparser:
   method: drain # log parsing method
   parameters:
     depth: # drain parse tree depth
-      max: 10 # maximum
+      max: 20 # maximum
       min: 1 # minimum
       step: 1 # step size
     st: # drain similarity threshold
       max: 1
       min: 0
       step: 0.01
-    maxChild: # maximum number of children
-      max: 200
-      min: 0
-      step: 1

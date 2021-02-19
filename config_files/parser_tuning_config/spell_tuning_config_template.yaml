@@ -10,7 +10,7 @@ preprocess: # supply all preprocessing regex
 logparser:
   method: spell # log parsing method
   parameters:
-    tau: # Spell threshold for determining longest common subsequence
-      max: 5 # maximum
+    tau: # Spell threshold for determining longest common subsequence, expressed as ratio
+      max: 1 # maximum
       min: 0 # minimum
       step: 0.01 # step size
