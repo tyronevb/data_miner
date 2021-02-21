@@ -15,4 +15,4 @@ logparser:
     k1: 1 # LogMine clustering parameter
     k2: 1 # LogMine clustering parameter
     alpha: 100 # LogMine factor by which to increase max dist for higher levels
-    levels: 2 # LogMine max number of levels in the clustering hierarchy
+    levels: 2 # LogMine max number of levels in the clustering hierarchy, (int)

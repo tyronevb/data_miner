@@ -18,7 +18,7 @@ logparser:
       max: 1
       min: 0.1
       step: 0.1
-    levels: # LogMine max number of levels in the clustering hierarchy - seems to work best when set to 2
+    levels: # LogMine max number of levels in the clustering hierarchy - seems to work best when set to 2 (int)
       max: 6
       min: 2
       step: 2
