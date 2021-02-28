@@ -47,7 +47,7 @@ class LogParser(object):
         keep_para: flag to enable extracting and saving of runtime parameters
         """
         self.path = indir
-        self.save_path = outdir
+        self.savePath = outdir
         self.log_format = log_format
         self.rex = rex
         self.keep_para = keep_para
@@ -167,7 +167,7 @@ class LogParser(object):
         df_un_parsed = df_log_file.copy(deep=True)
         df_parsed = df_log_file.copy(deep=True)
 
-        labels = ("Event ID", "Event Template")
+        labels = ("EventId", "EventTemplate")
         events = []
         templates = []
         template_ids = []
@@ -218,8 +218,8 @@ class LogParser(object):
         df_parsed.drop(df_un_parsed.index, inplace=True)
 
         # create structured DataFrame of all matched log messages
-        df_parsed["Event ID"] = template_ids
-        df_parsed["Event Template"] = templates
+        df_parsed["EventId"] = template_ids
+        df_parsed["EventTemplate"] = templates
         if self.keep_para:
             df_parsed["Parameters"] = parameters
 
@@ -228,22 +228,22 @@ class LogParser(object):
 
         # create DataFrame of event templates and occurrences
         df_events = pd.DataFrame.from_records(events, columns=labels)
-        df_events["Occurrences"] = df_events.groupby(["Event ID"])["Event Template"].transform("count")
+        df_events["Occurrences"] = df_events.groupby(["EventId"])["EventTemplate"].transform("count")
         df_events.drop_duplicates(inplace=True)
 
-        if not os.path.exists(self.save_path):
-            os.makedirs(self.save_path)
+        if not os.path.exists(self.savePath):
+            os.makedirs(self.savePath)
 
         # create csv outputs of all files
-        structured_log_output = os.path.join(self.save_path, self.log_file + "_structured.csv")
-        event_template_output = os.path.join(self.save_path, self.log_file + "_templates.csv")
+        structured_log_output = os.path.join(self.savePath, self.log_file + "_structured.csv")
+        event_template_output = os.path.join(self.savePath, self.log_file + "_templates.csv")
 
         df_parsed.to_csv(structured_log_output, index=False)
         df_events.to_csv(event_template_output, index=False)
 
         if self.save_un_parsed:
             # save the unmatched logs to a file
-            unmatched_messages_output = os.path.join(self.save_path, self.log_file + "_unmatched.csv")
+            unmatched_messages_output = os.path.join(self.savePath, self.log_file + "_unmatched.csv")
             df_un_parsed.to_csv(unmatched_messages_output, index=False)
 
         self.df_parsed = df_parsed
